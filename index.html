@@ -1,503 +1,175 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>MrBikeBD — Used Bike Marketplace Demo</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
-  <style>
-    :root{
-      --bg:#f6f9fb;
-      --card:#ffffff;
-      --muted:#6b7280;
-      --accent:#295f92; /* MrBikebd primary */
-      --accent-2:#316896;
-      --accent-3:#ff6b35;
-      --glass: rgba(255,255,255,0.7);
-      --success:#16a34a;
-      --danger:#ef4444;
-      --radius:14px;
-      --shadow: 0 8px 24px rgba(16,24,40,0.08);
-      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0;background:linear-gradient(180deg,#f3f7fb 0%,var(--bg) 100%);color:#0f172a;
-      -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
-      line-height:1.45;
-    }
-    .container{max-width:1100px;margin:0 auto;padding:28px}
-    header{display:flex;align-items:center;justify-content:space-between;padding:10px 0}
-    .brand{display:flex;align-items:center;gap:12px}
-    .logo{
-      width:48px;height:48px;border-radius:10px;background:linear-gradient(135deg,var(--accent),var(--accent-2));
-      display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:18px;box-shadow:var(--shadow)
-    }
-    nav a{margin-left:18px;color:var(--muted);text-decoration:none;font-weight:600}
-    .hero{
-      display:grid;grid-template-columns:1fr 420px;gap:28px;align-items:center;margin-top:18px;
-    }
-    .hero-card{background:var(--card);border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
-    h1{font-size:28px;margin:0 0 10px}
-    p.lead{color:var(--muted);margin:0 0 18px}
-    .cta{display:flex;gap:12px;align-items:center}
-    .btn{
-      display:inline-flex;align-items:center;gap:10px;padding:12px 16px;border-radius:10px;border:0;font-weight:700;cursor:pointer;
-      box-shadow: 0 6px 18px rgba(41,95,146,0.12);
-    }
-    .btn-primary{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white}
-    .btn-ghost{background:transparent;border:1px solid rgba(16,24,40,0.06);color:var(--accent)}
-    .stats{display:flex;gap:12px;margin-top:16px}
-    .stat{background:linear-gradient(180deg,#fff, #fbfdff);padding:12px;border-radius:10px;min-width:120px;text-align:center}
-    .stat strong{display:block;font-size:18px}
-    /* Right column card */
-    .preview{
-      background:linear-gradient(180deg,#ffffff, #f8fcff);border-radius:18px;padding:18px;box-shadow:var(--shadow);
-    }
-    .preview .market-hero{display:flex;align-items:center;gap:12px}
-    .chip{background:rgba(41,95,146,0.08);padding:6px 10px;border-radius:999px;color:var(--accent);font-weight:700}
-    .mini-list{margin-top:16px}
-    .mini-list li{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px dashed rgba(16,24,40,0.04)}
-    /* Features */
-    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:28px 0}
-    .feature{background:var(--card);padding:18px;border-radius:12px;box-shadow:var(--shadow);transition:transform .28s ease,box-shadow .28s ease;cursor:pointer}
-    .feature:hover{transform:translateY(-8px)}
-    .feature h3{margin:8px 0}
-    .feature p{color:var(--muted);font-size:14px}
-    /* Marketplace demo */
-    .marketplace{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-bottom:28px}
-    .cards{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}
-    .card{background:var(--card);padding:12px;border-radius:12px;box-shadow:0 6px 16px rgba(16,24,40,0.06);display:flex;gap:12px;align-items:center}
-    .thumb{width:98px;height:68px;background:#e6eef7;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;color:var(--accent)}
-    .card .meta{flex:1}
-    .tags{display:flex;gap:8px;margin-top:8px}
-    .tag{font-size:12px;padding:6px 8px;border-radius:8px;background:#f3f7fb;color:var(--accent);font-weight:700}
-    /* right panel */
-    .panel{background:var(--card);padding:16px;border-radius:12px;box-shadow:var(--shadow)}
-    .panel h4{margin:0 0 12px}
-    .slider-row{display:flex;align-items:center;gap:12px}
-    input[type=range]{width:100%}
-    .revs{display:flex;gap:12px;align-items:center;margin-top:12px}
-    .rev-bubble{background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;padding:10px 14px;border-radius:999px;font-weight:800}
-    /* roadmap */
-    .roadmap{background:linear-gradient(180deg,#fff,#f8fbff);padding:18px;border-radius:12px;box-shadow:var(--shadow);margin-bottom:28px}
-    .timeline{display:flex;flex-direction:column;gap:14px;margin-top:12px}
-    .step{display:flex;gap:12px;align-items:flex-start}
-    .step .dot{width:14px;height:14px;border-radius:100%;background:var(--accent);margin-top:6px}
-    /* footer */
-    footer{margin-top:28px;padding:12px 0;color:var(--muted);text-align:center;font-size:14px}
-    /* modal */
-    .modal-backdrop{position:fixed;inset:0;background:rgba(2,6,23,0.48);display:none;align-items:center;justify-content:center;padding:20px;z-index:60}
-    .modal{background:var(--card);padding:18px;border-radius:12px;max-width:720px;width:100%;box-shadow:0 24px 48px rgba(2,6,23,0.36)}
-    .modal h3{margin:0 0 12px}
-    .form-row{display:flex;gap:8px;margin-bottom:8px}
-    .form-row input, .form-row select, textarea{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(7,10,34,0.06)}
-    .form-row textarea{min-height:80px;resize:vertical}
-    .closebtn{background:transparent;border:0;font-weight:700;color:var(--muted);cursor:pointer}
-    /* small screens */
-    @media (max-width:960px){
-      .hero{grid-template-columns:1fr}
-      .features{grid-template-columns:repeat(2,1fr)}
-      .marketplace{grid-template-columns:1fr}
-      .cards{grid-template-columns:1fr}
-    }
-    @media (max-width:520px){
-      .features{grid-template-columns:1fr}
-    }
-    /* subtle micro-interactions */
-    .expand{transition:all .28s ease}
-    .badge{display:inline-flex;padding:6px 8px;border-radius:999px;background:linear-gradient(90deg,var(--accent),var(--accent-2));color:white;font-weight:700;font-size:12px}
-    .muted{color:var(--muted)}
-    .small{font-size:13px;color:var(--muted)}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Website Demos Collection</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6584;
+            --accent: #4ECDC4;
+            --highlight: #FFE66D;
+            --dark: #2D3142;
+            --light: #F8F9FA;
+            --primary-gradient: linear-gradient(135deg, var(--primary), #4A44C6);
+            --secondary-gradient: linear-gradient(135deg, var(--secondary), #FF416C);
+            --accent-gradient: linear-gradient(135deg, var(--accent), #2BB8A3);
+            --font-main: 'Poppins', sans-serif;
+            --font-heading: 'Montserrat', sans-serif;
+            --spacing-sm: 1rem;
+            --spacing-md: 1.5rem;
+            --spacing-lg: 2rem;
+            --spacing-xl: 3rem;
+            --radius-lg: 16px;
+            --shadow-lg: 0 20px 25px rgba(0, 0, 0, 0.1);
+            --shadow-xl: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-main);
+            line-height: 1.6;
+            color: var(--dark);
+            background: linear-gradient(135deg, #f5f7fa 0%, #e4edf5 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            padding: var(--spacing-xl) 0 var(--spacing-lg);
+        }
+        
+        h1 {
+            font-family: var(--font-heading);
+            font-size: 3rem;
+            margin-bottom: var(--spacing-sm);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            color: #666;
+            max-width: 600px;
+            margin: 0 auto var(--spacing-lg);
+        }
+        
+        .demos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-xl) 0;
+        }
+        
+        .demo-card {
+            background: white;
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            text-align: center;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(108, 99, 255, 0.1);
+        }
+        
+        .demo-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-xl);
+            border-color: rgba(108, 99, 255, 0.3);
+        }
+        
+        .demo-icon {
+            font-size: 3rem;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .demo-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: var(--spacing-sm);
+            color: var(--dark);
+        }
+        
+        .demo-card p {
+            color: #666;
+            margin-bottom: var(--spacing-md);
+        }
+        
+        .demo-link {
+            display: inline-block;
+            background: var(--primary-gradient);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .demo-link:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-lg);
+        }
+        
+        footer {
+            text-align: center;
+            padding: var(--spacing-lg) 0;
+            color: #666;
+            margin-top: var(--spacing-xl);
+            border-top: 1px solid rgba(0,0,0,0.1);
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .demos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
-    <header>
-      <div class="brand">
-        <div class="logo">MB</div>
-        <div>
-          <div style="font-weight:800">MrBikeBD</div>
-          <div style="font-size:12px;color:var(--muted)">Bangladesh bike marketplace & data</div>
-        </div>
-      </div>
-      <nav>
-        <a href="#market">Marketplace</a>
-        <a href="#features">Features</a>
-        <a href="#roadmap">Roadmap</a>
-        <a href="#contact" class="btn-ghost" style="padding:8px 12px;border-radius:8px">Contact</a>
-      </nav>
-    </header>
-
-    <section class="hero">
-      <div class="hero-card">
-        <div style="display:flex;justify-content:space-between;align-items:flex-start">
-          <div>
-            <h1>Used Bike Marketplace inside every bike page</h1>
-            <p class="lead">Turn every bike info page into a high-value marketplace hub — increase pageviews, user retention, and monetization with paid promotions and listing flows tuned for Bangladesh.</p>
-            <div class="cta">
-              <button class="btn btn-primary" id="startBtn">Show Demo</button>
-              <button class="btn btn-ghost" id="openListBtn">List a Bike (demo)</button>
+    <div class="container">
+        <header>
+            <h1>Website Demos Collection</h1>
+            <p class="subtitle">A collection of visually appealing websites designed for client presentations and demonstrations</p>
+        </header>
+        
+        <div class="demos-grid">
+            <div class="demo-card">
+                <div class="demo-icon">📊</div>
+                <h3>Visual Guide Demo</h3>
+                <p>A modern, colorful website with rich data visualizations and interactive elements perfect for client presentations.</p>
+                <a href="visual-guide-demo.html" class="demo-link">View Demo</a>
             </div>
-            <div class="stats" style="margin-top:20px">
-              <div class="stat">
-                <div class="small">Baseline Traffic</div>
-                <strong id="stat-traffic">100k</strong>
-                <div class="small muted">pageviews / month</div>
-              </div>
-              <div class="stat">
-                <div class="small">Est. Ad Revenue</div>
-                <strong id="stat-rev">$250</strong>
-                <div class="small muted">per month (est)</div>
-              </div>
-              <div class="stat">
-                <div class="small">Paid Boosts</div>
-                <strong id="stat-boost">৳10,440</strong>
-                <div class="small muted">example / month</div>
-              </div>
+            
+            <div class="demo-card">
+                <div class="demo-icon">🏍️</div>
+                <h3>Bike Marketplace Demo</h3>
+                <p>A comprehensive marketplace demo showcasing bike listings with monetization features and revenue projections.</p>
+                <a href="bike-marketplace-demo.html" class="demo-link">View Demo</a>
             </div>
-          </div>
-          <div style="max-width:36%;min-width:160px;text-align:right">
-            <div style="font-size:13px;color:var(--muted)">Conversion preview</div>
-            <div style="margin-top:12px" class="mini-card">
-              <div style="background:linear-gradient(90deg,#f9fcff,#fff);padding:12px;border-radius:12px;box-shadow:var(--shadow)">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <div>
-                    <div style="font-size:12px;color:var(--muted)">Active Listings</div>
-                    <div style="font-weight:800;font-size:20px">1,240</div>
-                  </div>
-                  <div style="text-align:right">
-                    <div class="chip">Market Live</div>
-                    <div style="font-size:12px;color:var(--muted);margin-top:8px">Avg views/list: <strong>420</strong></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
         </div>
-      </div>
-
-      <aside>
-        <div class="preview">
-          <div class="market-hero">
-            <div class="chip">Marketplace</div>
-            <div style="flex:1">
-              <div style="font-weight:700">Used bike listings inside bike pages</div>
-              <div class="small muted" style="margin-top:6px">Long-tail SEO + repeated daily visits = reliable revenue</div>
-            </div>
-          </div>
-
-          <ul class="mini-list" style="margin-top:10px">
-            <li><div class="small">Featured slot (R15 V4)</div><div class="small muted">৳199</div></li>
-            <li><div class="small">Homepage spotlight</div><div class="small muted">৳499</div></li>
-            <li><div class="small">Urgent tag</div><div class="small muted">৳49</div></li>
-          </ul>
-
-          <div style="display:flex;gap:8px;margin-top:12px">
-            <button class="btn btn-primary" id="revenueButton">Play with revenue</button>
-            <button class="btn btn-ghost" onclick="scrollToId('market')">See marketplace</button>
-          </div>
-        </div>
-      </aside>
-    </section>
-
-    <!-- Features -->
-    <section id="features">
-      <h2 style="margin-top:28px">Core Features</h2>
-      <div class="features">
-        <div class="feature expand" data-desc="Every listing is an SEO page with long-tail keywords and title optimization">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div class="badge">SEO</div>
-            <h3>Listing → SEO pages</h3>
-          </div>
-          <p>Every used-bike listing generates a unique page that ranks for local, long-tail searches.</p>
-        </div>
-
-        <div class="feature expand" data-desc="Free listings + paid boosts (featured/homepage/urgent)">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div class="badge">Monetize</div>
-            <h3>Free + Paid Boosts</h3>
-          </div>
-          <p>Sell Featured slots, Homepage Spotlight, and Urgent tags to sellers for direct revenue.</p>
-        </div>
-
-        <div class="feature expand" data-desc="Phone OTP, moderation, renewal & spam prevention">
-          <div style="display:flex;align-items:center;gap:12px">
-            <div class="badge">Trust</div>
-            <h3>Verification & Trust</h3>
-          </div>
-          <p>Phone OTP, moderation, and limiting free listings reduce fraud and increase buyer confidence.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Marketplace demo -->
-    <section id="market" style="margin-top:6px">
-      <h2>Marketplace Demo</h2>
-      <div class="marketplace">
-        <div>
-          <div class="cards">
-            <!-- Listing 1 -->
-            <div class="card">
-              <div class="thumb">R15</div>
-              <div class="meta">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <div style="font-weight:800">Used Yamaha R15 V4</div>
-                  <div class="badge">Featured</div>
-                </div>
-                <div class="small muted">Dhaka · 2022 · 16,000 km</div>
-                <div class="tags">
-                  <div class="tag">৳2.65L</div><div class="tag">Phone Verified</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Listing 2 -->
-            <div class="card">
-              <div class="thumb">CFM</div>
-              <div class="meta">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <div style="font-weight:800">CFMoto 300SR</div>
-                  <div class="small">30 views/day</div>
-                </div>
-                <div class="small muted">Chittagong · 2021 · 9,800 km</div>
-                <div class="tags">
-                  <div class="tag">৳3.10L</div><div class="tag">Urgent</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Listing 3 -->
-            <div class="card">
-              <div class="thumb">RZ</div>
-              <div class="meta">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <div style="font-weight:800">Used RZ 350</div>
-                  <div class="small">120 views</div>
-                </div>
-                <div class="small muted">Sylhet · 2019 · 22,000 km</div>
-                <div class="tags">
-                  <div class="tag">৳1.45L</div><div class="tag">Phone Verified</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Listing 4 -->
-            <div class="card">
-              <div class="thumb">Dio</div>
-              <div class="meta">
-                <div style="display:flex;justify-content:space-between;align-items:center">
-                  <div style="font-weight:800">Honda Dio</div>
-                  <div class="small">10 views/day</div>
-                </div>
-                <div class="small muted">Dhaka · 2020 · 6,200 km</div>
-                <div class="tags">
-                  <div class="tag">৳45k</div><div class="tag">Free</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <aside class="panel">
-          <h4>Revenue Simulator</h4>
-          <div class="small muted">Adjust pageviews and RPM to see estimated ad revenue</div>
-
-          <div style="margin-top:12px">
-            <label class="small">Monthly pageviews <span id="pvLabel">100,000</span></label>
-            <div class="slider-row" style="margin-top:8px">
-              <input id="pvRange" type="range" min="10000" max="2000000" step="10000" value="100000" />
-            </div>
-
-            <label class="small" style="margin-top:12px">AdSense RPM ($/1000) <span id="rpmLabel">2.5</span></label>
-            <input id="rpmRange" type="range" min="1" max="5" step="0.5" value="2.5" />
-
-            <div class="revs">
-              <div class="rev-bubble" id="revOutput">$250</div>
-              <div class="small muted">Ad revenue estimate</div>
-            </div>
-
-            <div style="margin-top:12px" class="small muted">Paid Boosts example (100 listings / month):</div>
-            <div style="display:flex;gap:8px;margin-top:8px">
-              <div style="flex:1">
-                <div class="small">Featured (20× ৳199)</div><strong>৳3,980</strong>
-              </div>
-              <div style="flex:1">
-                <div class="small">Homepage (10× ৳499)</div><strong>৳4,990</strong>
-              </div>
-              <div style="flex:1">
-                <div class="small">Urgent (30× ৳49)</div><strong>৳1,470</strong>
-              </div>
-            </div>
-            <div style="margin-top:12px;font-weight:800">Total boosts: <span id="boostTotal">৳10,440</span></div>
-          </div>
-        </aside>
-      </div>
-    </section>
-
-    <!-- Roadmap -->
-    <section id="roadmap">
-      <div class="roadmap">
-        <h2>Implementation Roadmap (MVP → Growth)</h2>
-        <div class="timeline">
-          <div class="step">
-            <div class="dot"></div>
-            <div><strong>Phase 1 — Foundation (2–4 wks)</strong><div class="small muted">Listing DB, upload flow, moderation, widget embed</div></div>
-          </div>
-          <div class="step">
-            <div class="dot"></div>
-            <div><strong>Phase 2 — Marketplace (4–6 wks)</strong><div class="small muted">Filters, OTP verification, seller dashboard</div></div>
-          </div>
-          <div class="step">
-            <div class="dot"></div>
-            <div><strong>Phase 3 — Monetization (3–5 wks)</strong><div class="small muted">Paid boosts, payments, analytics</div></div>
-          </div>
-          <div class="step">
-            <div class="dot"></div>
-            <div><strong>Phase 4 — Growth</strong><div class="small muted">Dealer subscriptions, push notifications, SEO scale</div></div>
-          </div>
-        </div>
-        <div style="margin-top:12px;display:flex;gap:10px">
-          <button class="btn btn-primary" id="startDev">Start Development</button>
-          <button class="btn btn-ghost" onclick="scrollToId('contact')">Request Estimate</button>
-        </div>
-      </div>
-    </section>
-
-    <footer id="contact">
-      Built for: <strong>MrBikeBD</strong> • Demo by Product Team • <span style="color:var(--muted)">Use this demo for presentations</span>
-    </footer>
-  </div>
-
-  <!-- Modal (List a bike) -->
-  <div class="modal-backdrop" id="modal">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <div style="display:flex;justify-content:space-between;align-items:center">
-        <h3 id="modalTitle">List a bike — Demo (no data saved)</h3>
-        <button class="closebtn" id="closeModal">✕</button>
-      </div>
-      <div style="margin-top:8px" class="small muted">This is a demo form to show the listing flow and required fields.</div>
-      <form id="demoForm" style="margin-top:12px">
-        <div class="form-row">
-          <input placeholder="Name (seller)" required />
-          <input placeholder="Phone (will be OTP verified)" required />
-        </div>
-        <div class="form-row">
-          <input placeholder="Brand (e.g., Yamaha)" required />
-          <input placeholder="Model (e.g., R15 V4)" required />
-        </div>
-        <div class="form-row">
-          <input placeholder="Year (e.g., 2022)" />
-          <input placeholder="Mileage (km)" />
-        </div>
-        <div class="form-row">
-          <input placeholder="Price (৳)" />
-          <select>
-            <option>City (e.g., Dhaka)</option>
-            <option>Chittagong</option>
-            <option>Sylhet</option>
-          </select>
-        </div>
-        <div class="form-row">
-          <textarea placeholder="Short description"></textarea>
-        </div>
-        <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-          <button type="button" class="btn btn-ghost" id="cancelForm">Cancel</button>
-          <button type="submit" class="btn btn-primary">Submit Listing (demo)</button>
-        </div>
-      </form>
+        
+        <footer>
+            <p>Website Demos Collection &copy; 2025 | Created for client presentations</p>
+        </footer>
     </div>
-  </div>
-
-  <script>
-    // Simple interactivity & demo values
-    const pvRange = document.getElementById('pvRange');
-    const rpmRange = document.getElementById('rpmRange');
-    const pvLabel = document.getElementById('pvLabel');
-    const rpmLabel = document.getElementById('rpmLabel');
-    const revOutput = document.getElementById('revOutput');
-    const statTraffic = document.getElementById('stat-traffic');
-    const statRev = document.getElementById('stat-rev');
-    const boostTotal = document.getElementById('boostTotal');
-    const pvStep = 10000;
-
-    function formatCurrencyUSD(v){
-      return '$' + Number(v).toLocaleString(undefined,{maximumFractionDigits:0});
-    }
-    function formatBDT(v){
-      return '৳' + Number(v).toLocaleString();
-    }
-
-    function updateRevenue(){
-      const pv = Number(pvRange.value);
-      const rpm = Number(rpmRange.value);
-      pvLabel.textContent = pv.toLocaleString();
-      rpmLabel.textContent = rpm;
-      const revenue = (pv / 1000) * rpm;
-      revOutput.textContent = formatCurrencyUSD(revenue.toFixed(0));
-      // Update heading stats (approx conversions from earlier examples)
-      statTraffic.textContent = pv.toLocaleString();
-      statRev.textContent = formatCurrencyUSD(revenue.toFixed(0));
-      // Boost example: keep sample totals static to demo (from doc)
-      boostTotal.textContent = '৳10,440';
-      // small animation
-      revOutput.animate([{transform:'translateY(0)'},{transform:'translateY(-6px)'},{transform:'translateY(0)'}],{duration:420});
-    }
-
-    pvRange.addEventListener('input',updateRevenue);
-    rpmRange.addEventListener('input',updateRevenue);
-    // init
-    updateRevenue();
-
-    // Modal controls
-    const modal = document.getElementById('modal');
-    document.getElementById('openListBtn').addEventListener('click',()=>modal.style.display='flex');
-    document.getElementById('startBtn').addEventListener('click',()=>{scrollToId('market');flashPanel();});
-    document.getElementById('closeModal').addEventListener('click',()=>modal.style.display='none');
-    document.getElementById('cancelForm').addEventListener('click',()=>modal.style.display='none');
-    document.getElementById('demoForm').addEventListener('submit',(e)=>{
-      e.preventDefault();
-      alert('Thanks — demo listing submitted (no data saved). In production we would verify phone via OTP and publish to moderation queue.');
-      modal.style.display='none';
-    });
-
-    function scrollToId(id){
-      const el = document.getElementById(id);
-      if(!el) return;
-      el.scrollIntoView({behavior:'smooth',block:'start'});
-    }
-    function flashPanel(){
-      const p = document.querySelector('.panel');
-      if(!p) return;
-      p.animate([{boxShadow:'0 0 0 0 rgba(41,95,146,0.08)'},{boxShadow:'0 24px 48px rgba(41,95,146,0.12)'}],{duration:600,iterations:1});
-    }
-
-    // Click-to-expand features: show description as tooltip-like
-    document.querySelectorAll('.feature').forEach(f=>{
-      f.addEventListener('click',()=>{
-        const desc = f.getAttribute('data-desc') || '';
-        const el = document.createElement('div');
-        el.style.position='fixed';
-        el.style.left='50%';
-        el.style.top='50%';
-        el.style.transform='translate(-50%,-50%)';
-        el.style.background='var(--card)';
-        el.style.padding='16px';
-        el.style.borderRadius='12px';
-        el.style.boxShadow='0 18px 48px rgba(2,6,23,0.2)';
-        el.innerHTML = '<strong style="display:block;margin-bottom:8px">'+f.querySelector('h3').textContent+'</strong><div class="small muted">'+desc+'</div><div style="text-align:right;margin-top:12px"><button class="btn btn-primary">Close</button></div>';
-        document.body.appendChild(el);
-        el.querySelector('button').addEventListener('click',()=>document.body.removeChild(el));
-      });
-    });
-
-    // small keyboard shortcut to open demo modal (D)
-    document.addEventListener('keydown', (e)=>{
-      if(e.key.toLowerCase()==='d'){modal.style.display='flex'}
-    });
-
-  </script>
 </body>
 </html>
